@@ -2,7 +2,7 @@ import { BinanceP2PApiHelper } from "../helpers/BinanceP2PRequestHelper.ts";
 import { getMaxOfElements, getMinOfElements } from "../utils/utils.ts";
 import { BinanceP2PResponseBody } from "../../types.ts";
 
-interface InfoGathererOptions {
+interface ClientOptions {
     asset?: string,
     transAmount?: number
     payTypes?: string[],
@@ -12,8 +12,8 @@ interface InfoGathererOptions {
     page?: number
 }
 
-export class BinanceP2PInfoGatherer {
-    static getAverageOfPage = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: InfoGathererOptions) => {
+export class BinanceP2PClient {
+    static getAverageOfPage = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: ClientOptions) => {
         try {
             const response = await BinanceP2PApiHelper.makeRequest({
                 asset,
@@ -42,7 +42,7 @@ export class BinanceP2PInfoGatherer {
             console.error(e);
         }
     }
-    static getNumberOfOperations = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: InfoGathererOptions) => {
+    static getNumberOfOperations = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: ClientOptions) => {
         try {
             const response = await BinanceP2PApiHelper.makeRequest({
                 asset,
@@ -69,7 +69,7 @@ export class BinanceP2PInfoGatherer {
             console.error(e);
         }
     }
-    static getMaxMin = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: InfoGathererOptions) => {
+    static getMaxMin = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: ClientOptions) => {
         try {
             const response = await BinanceP2PApiHelper.makeRequest({
                 asset,
@@ -102,9 +102,9 @@ export class BinanceP2PInfoGatherer {
             console.error(e);
         }
     }
-    static getAllOperations = ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: InfoGathererOptions) => {
+    static getAllOperations = ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: ClientOptions) => {
         return new Promise<(BinanceP2PResponseBody | undefined)[]>((res, rej) => {
-            const totalOperations = BinanceP2PInfoGatherer.getNumberOfOperations({ asset, transAmount, payTypes, countries, tradeType, fiat, page });
+            const totalOperations = BinanceP2PClient.getNumberOfOperations({ asset, transAmount, payTypes, countries, tradeType, fiat, page });
             totalOperations.then((totalOperationsRes) => {
                 if (!totalOperationsRes || totalOperationsRes <= 0) return -1;
                 const operations: Promise<BinanceP2PResponseBody | undefined>[] = [];
@@ -138,10 +138,10 @@ export class BinanceP2PInfoGatherer {
                 .catch((err) => console.error(err));
         });
     }
-    static getAverageOfAllOperations = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: InfoGathererOptions): Promise<number | undefined> => {
+    static getAverageOfAllOperations = async ({ asset = "USDT", transAmount, payTypes = [], countries = [], tradeType = "BUY", fiat = "USD", page = 1 }: ClientOptions): Promise<number | undefined> => {
         try {
-            const operations = await BinanceP2PInfoGatherer.getAllOperations({ asset, transAmount, payTypes, countries, tradeType, fiat });
-            const numberOfOperations = await BinanceP2PInfoGatherer.getNumberOfOperations({ asset, transAmount, payTypes, countries, tradeType, fiat, page });
+            const operations = await BinanceP2PClient.getAllOperations({ asset, transAmount, payTypes, countries, tradeType, fiat });
+            const numberOfOperations = await BinanceP2PClient.getNumberOfOperations({ asset, transAmount, payTypes, countries, tradeType, fiat, page });
             if (!operations) return -1;
             const sumOfOperations = operations.reduce((acc, next) => {
                 const item = next;

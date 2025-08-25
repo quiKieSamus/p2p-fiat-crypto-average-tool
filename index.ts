@@ -4,4 +4,4 @@
 export * from "./types.ts";
 export * from "./src/utils/utils.ts";
 export * from "./src/helpers/BinanceP2PRequestHelper.ts";
-export * from "./src/services/BinanceP2PInfoGatherer.ts";
+export * from "./src/services/BinanceP2PClient.ts";
