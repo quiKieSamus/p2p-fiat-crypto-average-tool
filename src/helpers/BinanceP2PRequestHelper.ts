@@ -32,7 +32,7 @@ export class BinanceP2PApiHelper {
             return response;
         }
         catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 }
