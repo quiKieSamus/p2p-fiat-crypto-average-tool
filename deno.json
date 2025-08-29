@@ -1,4 +1,8 @@
 {
+  "name": "@quikiesamus/p2p-fiat-crypto-average-tool",
+  "exports": "./index.ts",
+  "version": "1.0.0",
+  "license": "MIT",
   "tasks": {
     "dev": "deno run --watch main.ts"
   },
